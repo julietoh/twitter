@@ -1,7 +1,7 @@
 package com.codepath.apps.restclienttemplate.models;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.codepath.apps.restclienttemplate.R;
 
@@ -12,4 +12,5 @@ public class ComposeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
     }
+
 }
