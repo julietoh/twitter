@@ -39,4 +39,13 @@
         android:layout_toEndOf="@+id/tvUserName"
         android:layout_marginStart="5dp" />
 
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="TextView"
+        android:textSize="10sp" />
+
 </RelativeLayout>
