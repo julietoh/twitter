@@ -7,34 +7,29 @@
     tools:context="com.codepath.apps.restclienttemplate.models.ComposeActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/BTNtweet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="292dp"
-        tools:layout_editor_absoluteY="-1dp" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="Tweet"
         tools:layout_editor_absoluteX="3dp"
         tools:layout_editor_absoluteY="-1dp"
-        android:layout_alignParentTop="true"
+        android:layout_marginTop="49dp"
+        android:onClick="onSubmit"
+        android:layout_marginEnd="19dp"
+        android:layout_below="@+id/ETtweet"
         android:layout_alignParentEnd="true" />
 
     <EditText
-        android:id="@+id/PTtweet"
+        android:id="@+id/ETtweet"
         android:layout_width="384dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button"
+        android:layout_marginTop="49dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
+        android:text="What's happening?"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="119dp"
-        android:layout_below="@+id/button"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="49dp" />
+        tools:layout_editor_absoluteY="119dp" />
 
 </RelativeLayout>
