@@ -40,7 +40,7 @@ public class TwitterClient extends OAuthBaseClient {
 				String.format(REST_CALLBACK_URL_TEMPLATE, context.getString(R.string.intent_host),
 						context.getString(R.string.intent_scheme), context.getPackageName(), FALLBACK_URL));
 	}
-	// CHANGE THIS
+
 	// DEFINE METHODS for different API endpoints here
 	public void getHomeTimeline(AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
@@ -52,8 +52,36 @@ public class TwitterClient extends OAuthBaseClient {
 		client.get(apiUrl, params, handler);
 	}
 
+	// DEFINE METHODS for different API endpoints here
+	public void getMentionsTimeline(AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+		// Can specify query string params directly or through RequestParams.
+		RequestParams params = new RequestParams();
+		params.put("count", 25);
+		// params.put("since_id", 1);
+		params.put("since_id", 1);
+		client.get(apiUrl, params, handler);
+	}
+
+
+	// DEFINE METHODS for different API endpoints here
+	public void getUserTimeline(String screenName, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/user_timeline.json");
+		// Can specify query string params directly or through RequestParams.
+		RequestParams params = new RequestParams();
+		params.put("screen_name", screenName);
+		params.put("count", 25);
+		client.get(apiUrl, params, handler);
+	}
+
+	// DEFINE METHODS for different API endpoints here
+	public void getUserInfo(AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("account/verify_credentials.json");
+		client.get(apiUrl, null, handler);
+	}
+
 	public void getNextTweets(Long maxId, AsyncHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("statuses/home_timeline.json");
+		String apiUrl = getApiUrl("statuses/mentions_timeline.json");
 		// can specify query string params directly or through RequestParams
 		RequestParams params = new RequestParams();
 		params.put("count", 25);

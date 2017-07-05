@@ -22,6 +22,13 @@ import java.util.Locale;
  */
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
+    private List<Tweet> mTweets;
+    Context context;
+    private TweetAdapterListener mListener;
+
+    public interface TweetAdapterListener {
+        public void onItemSelected(View view, int position);
+    }
 
     // Clean all elements of the recycler
     public void clear() {
@@ -35,11 +42,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    private List<Tweet> mTweets;
-    Context context;
     // pass in the Tweets array in the constructor
-    public TweetAdapter(List<Tweet> tweets) {
+    public TweetAdapter(List<Tweet> tweets, TweetAdapterListener listener) {
         mTweets = tweets;
+        mListener = listener;
     }
     // for each row, inflate the layout and cache references into ViewHolder
     @Override
@@ -76,7 +82,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
     // create the ViewHolder class
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView ivProfileImage;
         public TextView tvUsername;
         public TextView tvBody;
@@ -92,27 +98,38 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvHandle = (TextView) itemView.findViewById(R.id.tvHandle);
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+
+            // handle row click event
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null) {
+                        // get the position of row element
+                        int position = getAdapterPosition();
+                        // fire the listener callback
+                        mListener.onItemSelected(view, position);
+                    }
+                }
+            });
         }
     }
 
+        // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
+        public String getRelativeTimeAgo(String rawJsonDate) {
+            String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+            SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+            sf.setLenient(true);
 
-    // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
-    public String getRelativeTimeAgo(String rawJsonDate) {
-        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
-        sf.setLenient(true);
+            String relativeDate = "";
+            try {
+                long dateMillis = sf.parse(rawJsonDate).getTime();
+                relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
+                        System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-        String relativeDate = "";
-        try {
-            long dateMillis = sf.parse(rawJsonDate).getTime();
-            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
-        } catch (ParseException e) {
-            e.printStackTrace();
+            return relativeDate;
         }
-
-        return relativeDate;
-    }
-
 
 }
