@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+
+import org.parceler.Parcels;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +28,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     private List<Tweet> mTweets;
     Context context;
     private TweetAdapterListener mListener;
+    public Tweet tweet;
 
     public interface TweetAdapterListener {
         public void onItemSelected(View view, int position);
@@ -63,7 +67,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         // get the data according to position
-        Tweet tweet = mTweets.get(position);
+        // Tweet tweet = mTweets.get(position);
+        tweet = mTweets.get(position);
 
         // populate the views according
         holder.tvUsername.setText(tweet.user.name);
@@ -99,6 +104,15 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvTime = (TextView) itemView.findViewById(R.id.tvTime);
 
+            // intent goes from context to profile
+            ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    Intent i = new Intent(context, ProfileActivity.class);
+                    i.putExtra("USER", Parcels.wrap(mTweets.get(position).user));
+                    context.startActivity(i);
+                }
+             });
             // handle row click event
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

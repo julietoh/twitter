@@ -13,18 +13,28 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
 public class ProfileActivity extends AppCompatActivity {
     TwitterClient client;
+    // public static final String USER = "USER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        String screenName = getIntent().getStringExtra("screen_name");
+
+        final User otherUser = Parcels.unwrap(getIntent().getParcelableExtra("USER"));
+        String screenName = "";
+        if (otherUser != null) {
+            screenName = otherUser.screenName;
+        }
+            else {
+             screenName = getIntent().getStringExtra("screen_name");
+        }
         // create the user fragment
         UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(screenName);
         // display the user timeline fragment inside the container
@@ -37,15 +47,22 @@ public class ProfileActivity extends AppCompatActivity {
         // commit
         ft.commit();
 
+
         client = TwitterApp.getRestClient();
         client.getUserInfo(new JsonHttpResponseHandler() {
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // deserialize the user object
+                User user = null;
                 try {
-                    User user = User.fromJSON(response);
+                    if (otherUser != null) {
+                        user = otherUser;
+                    } else {
+                        user = User.fromJSON(response);
+                    }
+                    user.fromJSON(response);
                     getSupportActionBar().setTitle(user.screenName);
-                    // populateUserHeadline(user);
                     populateUserHeadline(user);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -53,6 +70,8 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
+
     public void populateUserHeadline(User user) {
         TextView tvName = (TextView) findViewById(R.id.tvName);
         TextView tvTagline = (TextView) findViewById(R.id.tvTagline);
