@@ -57,4 +57,10 @@ public class TweetsListFragment extends Fragment implements TweetAdapter.TweetAd
         Tweet tweet = tweets.get(position);
         ((TweetSelectedListener) getActivity()).onTweetSelected(tweet);
     }
+    // step 5: TweetsListFragment to recycler view
+    public void onTweetsAvailable(Tweet tweet) {
+        tweets.add(0, tweet);
+        tweetAdapter.notifyItemInserted(0);
+        rvTweets.scrollToPosition(0);
+    }
 }
