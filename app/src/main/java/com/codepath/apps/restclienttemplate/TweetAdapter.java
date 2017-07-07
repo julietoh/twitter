@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +8,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -93,6 +95,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public TextView tvBody;
         public TextView tvHandle;
         public TextView tvTime;
+        public ImageButton ibReply;
+        public ImageButton ibRetweet;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -103,6 +107,33 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvHandle = (TextView) itemView.findViewById(R.id.tvHandle);
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+            ibReply = (ImageButton) itemView.findViewById(R.id.ibReply);
+            ibRetweet = (ImageButton) itemView.findViewById(R.id.ibRetweet);
+
+            // retweet button
+            ibRetweet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null) {
+                        // get the position of row element
+                        int position = getAdapterPosition();
+                        // fire the listener callback
+                        mListener.onItemSelected(view, position);
+                    }
+                }
+            });
+
+            final int REQUEST_CODE = 20;
+            // reply button !!
+            ibReply.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    Intent i = new Intent(context, ReplyActivity.class);
+                    i.putExtra("TWEET", Parcels.wrap(mTweets.get(position)));
+                    ((Activity) context).startActivityForResult(i, REQUEST_CODE);
+
+                }
+            });
 
             // intent goes from context to profile
             ivProfileImage.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +156,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     }
                 }
             });
+
         }
     }
 
