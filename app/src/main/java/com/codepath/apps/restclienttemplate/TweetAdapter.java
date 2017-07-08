@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +16,7 @@ import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import org.parceler.Parcels;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by joh on 6/26/17.
@@ -77,7 +73,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.tvBody.setText(tweet.body);
         holder.tvHandle.setText("@" + tweet.user.screenName);
         // relative time stamp
-        holder.tvTime.setText(getRelativeTimeAgo(tweet.createdAt));
+        holder.tvTime.setText(tweet.timestamp);
 
         Glide.with(context).load(tweet.user.profileImageUrl).into(holder.ivProfileImage);
     }
@@ -123,6 +119,19 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 }
             });
 
+            // set up click listener on itemview
+            // intent, get the tweet, sent in intent
+            // intent goes from context to profile
+            // !!!!!
+            tvBody.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    Intent i = new Intent(context, TweetDetailsActivity.class);
+                    i.putExtra("TWEET", Parcels.wrap(mTweets.get(position)));
+                    context.startActivity(i);
+                }
+            });
+
             final int REQUEST_CODE = 20;
             // reply button !!
             ibReply.setOnClickListener(new View.OnClickListener() {
@@ -160,22 +169,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         }
     }
 
-        // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
-        public String getRelativeTimeAgo(String rawJsonDate) {
-            String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-            SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
-            sf.setLenient(true);
 
-            String relativeDate = "";
-            try {
-                long dateMillis = sf.parse(rawJsonDate).getTime();
-                relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-                        System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            return relativeDate;
-        }
 
 }
